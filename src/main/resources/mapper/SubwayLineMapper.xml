@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chengjiaqi.beijing.subway.dao.SubwayLineMapper">
+
+    <resultMap id="BaseResultMap" type="com.chengjiaqi.beijing.subway.model.vo.SubwayLine">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="line_number" jdbcType="VARCHAR" property="lineNumber"/>
+</resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        line_number
+    </sql>
+
+    <select id="selectLineById" resultType="com.chengjiaqi.beijing.subway.model.vo.SubwayLine" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from line
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="line_number != null and line_number != ''">and line_number = #{lineNumber}
+            </if>
+        </where>
+    </select>
+</mapper>

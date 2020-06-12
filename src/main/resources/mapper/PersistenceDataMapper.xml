@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chengjiaqi.beijing.subway.dao.PersistenceDataMapper">
+    <resultMap id="BaseResultMap" type="com.chengjiaqi.beijing.subway.model.vo.PersistenceData">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="sid" jdbcType="VARCHAR" property="sid"/>
+        <result column="station_order" jdbcType="VARCHAR" property="stationOrder"/>
+        <result column="subway_line_number" jdbcType="VARCHAR" property="subwayLineNumber"/>
+        <result column="subway_station_name" jdbcType="VARCHAR" property="subwayStationName"/>
+        <result column="station_l" jdbcType="VARCHAR" property="stationL"/>
+        <result column="next_station_interval" jdbcType="VARCHAR" property="nextStationInterval"/>
+        <result column="transfer_line" jdbcType="VARCHAR" property="transferLine"/>
+        <result column="is_del" jdbcType="INTEGER" property="isDel"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,
+        sid,
+        station_order,
+        subway_line_number,
+        subway_station_name,
+        station_l,
+        next_station_interval,
+        transfer_line,
+        is_del
+    </sql>
+    <insert id="batchInsertSubwayLine" keyProperty="id" parameterType="list">
+        insert into subway_line (id,sid,station_order,subway_line_number,subway_station_name,station_l,is_del)
+        values
+        <foreach collection="subwayLines" item="item" index="index" separator=",">
+            (#{item.id},
+            #{item.sid,jdbcType=VARCHAR},
+            #{item.stationOrder,jdbcType=VARCHAR},
+            #{item.subwayLineNumber,jdbcType=VARCHAR},
+            #{item.subwayStationName,jdbcType=VARCHAR},
+            #{item.stationL,jdbcType=VARCHAR},
+            #{item.isDel,jdbcType=INTEGER}
+            )
+        </foreach>
+    </insert>
+</mapper>

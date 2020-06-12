@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chengjiaqi.beijing.subway.dao.StationRelativeMapper">
+
+    <resultMap id="BaseResultMap" type="com.chengjiaqi.beijing.subway.model.vo.StationInterval">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="line_number" jdbcType="VARCHAR" property="lineNumber"/>
+        <result column="last_station_name"  jdbcType="VARCHAR" property="lastStationName"/>
+        <result column="next_station_name" jdbcType="VARCHAR" property="nextStationName"/>
+        <result column="station_interval" jdbcType="VARCHAR" property="stationInterval"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        line_number,
+        last_station_name,
+        next_station_name,
+        station_interval
+    </sql>
+
+    <select id="selectIntervalById" resultType="com.chengjiaqi.beijing.subway.model.vo.SubwayStation" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from station_relative
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="line_number != null and line_number != ''">and line_number like concat
+                ('%',#{lineNumber} ,'%')
+            </if>
+            <if test="last_station_name != null and last_station_name != ''">and last_station_name = #{lastStationName}</if>
+            <if test="next_station_name != null and next_station_name != ''">and next_station_name = #{nextStationName}</if>
+            <if test="station_interval != null and station_interval != ''">and station_interval = #{stationaInterval}</if>
+        </where>
+    </select>
+
+    <update id="editLastStation">
+        update station_relative set last_station_name= #{stationNewName}
+        where last_station_name=#{stationName}
+    </update>
+
+    <update id="editNextStation">
+        update station_relative set next_station_name= #{stationNewName}
+        where next_station_name=#{stationName}
+    </update>
+
+    <select id="selectAllByLine" resultType="com.chengjiaqi.beijing.subway.model.vo.StationInterval" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from station_relative
+        where line_number=#{lineNumber}
+    </select>
+
+    <delete id="deleteByLineStation">
+        delete from station_relative where line_number=#{lineNumber}
+        and (next_station_name=#{nextStationName} or last_station_name=#{lastStationName})
+    </delete>
+
+    <insert id="insertData">
+        insert into station_relative(line_number,last_station_name,next_station_name,station_interval)
+        values (#{lineNumber},#{lastStationName},#{nextStationName},#{stationInterval})
+    </insert>
+</mapper>

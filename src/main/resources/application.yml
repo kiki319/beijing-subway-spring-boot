@@ -1,0 +1,68 @@
+#com:
+#  chengjiaqi:
+#    beijing:
+#      subway:
+#          getLineUrl:https://way.jd.com/jisuapi/transitLine?city={}&cityid=1&transitno=2&appkey=c796e0ef57f28d7b941915aa417b8bfc
+mybatis:
+  mapperLocations: classpath:/mapper/*.xml
+  typeAliasesPackage: com.chengjiaqi.beijing.subway.model.po
+remote:
+  connectTimeout: 5000
+  maxConnectPerRoute: 100
+  maxTotalConnect: 200
+  readTimeout: 30000
+server:
+  port: 8101
+#
+#spring:
+#  activemq:
+#    in-memory: true
+#    packages:
+#      trust-all: true
+#    password: admin
+#    user: admin
+#    pool:
+#      enabled: true
+#      expiry-timeout: 0
+#      idle-timeout: 30000
+#      max-connections: 20
+#    broker-url: tcp://localhost:61616
+  application:
+    name: beijing-subway
+  #  datasource:
+  #    driver-class-name: com.mysql.jdbc.Driver
+  #    password: 199631
+  #    url: jdbc:mysql://39.108.137.115:3306/test?useUnicode=true&characterEncoding=utf-8&useSSL=false
+  #    username: root
+  jms:
+    listener:
+      acknowledge-mode: CLIENT
+      concurrency: 5
+      max-concurrency: 20
+swagger:
+  host: localhost:${server.port}
+subway:
+  url: https://way.jd.com/jisuapi/transitLine?city={}&cityid=1&transitno=[]&appkey=c796e0ef57f28d7b941915aa417b8bfc
+  lineUrl: http://map.amap.com/service/subway?_1524027031909=&srhdata=1100_drw_beijing.json
+  stationUrl: http://map.amap.com/service/subway?_1524027031912&srhdata=1100_info_beijing.json
+#数据连接池配置
+datasource:
+  druid:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    initialSize: 5
+    maxActive: 20
+    maxEvictableIdleTimeMillis: 700000
+    maxOpenPreparedStatements: -1
+    maxWait: 3000
+    minEvictableIdleTimeMillis: 400000
+    minIdle: 5
+    password: 199631
+    poolPreparedStatements: false
+    timeBetweenEvictionRunsMillis: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://39.108.137.115:3306/test?useUnicode=true&serverTimezone=Asia/Shanghai&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowMultiQueries=true
+    username: root
+#打印sql日志
+logging:
+  level:
+    com.chengjiaqi.beijing.subway.dao.*:  debug

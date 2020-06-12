@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chengjiaqi.beijing.subway.dao.SubwayStationMapper">
+
+<resultMap id="BaseResultMap" type="com.chengjiaqi.beijing.subway.model.vo.SubwayStation">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="line_number" jdbcType="VARCHAR" property="lineNumber"/>
+    <result column="station_order"  jdbcType="VARCHAR" property="stationOrder"/>
+    <result column="station_name" jdbcType="VARCHAR" property="stationName"/>
+</resultMap>
+    <sql id="Base_Column_List">
+        id,
+        line_number,
+        station_order,
+        station_name
+    </sql>
+
+    <select id="selectStationById" resultType="com.chengjiaqi.beijing.subway.model.vo.SubwayStation" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from station
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="line_number != null and line_number != ''">and line_number like concat
+                ('%',#{line} ,'%')
+            </if>
+            <if test="station_order != null and station_order != ''">and station_order = #{stationOrder}</if>
+            <if test="station_name != null and subway_station_name != ''">and subway_station_name like concat
+                ('%',#{subwayStationName} ,'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectLinesByStation" resultType="java.lang.String">
+        select Line_number from station where station_name=#{stationName}
+    </select>
+
+    <select id="selectEndStationByLine" resultType="java.lang.String">
+        select station_name from station where station_order=(
+        select max(so.station_order) from (
+        select station_order from station where line_number=#{lineNumber}) as so) and line_number=#{lineNumber}
+    </select>
+
+    <select id="selectStartStationByLine" resultType="java.lang.String">
+        select station_name from station where station_order=1 and line_number=#{lineNumber}
+    </select>
+
+    <select id="selectStationsByLine" resultType="java.lang.String">
+        select station_name from station where line_number=#{lineNumber}
+    </select>
+
+    <update id="updateStation">
+        update station set station_name=
+        #{stationNewName} where station_name=#{stationName}
+    </update>
+
+    <delete id="deleteByLineStation">
+        delete from station where line_number=#{lineNumber}
+        and station_name=#{stationName}
+    </delete>
+
+    <update id="updateIdMinus">
+        update station set id=id-1 where id>(
+        select id from (select * from station where line_number=#{lineNumber}
+        and station_name=#{stationName}) temp)
+    </update>
+
+    <update id="updateOrderMinus">
+        update station set station_order=station_order-1 where station_order>(
+        select station_order from (select * from station where line_number=#{lineNumber}
+        and station_name=#{stationName}) temp) and line_number=#{lineNumber}
+    </update>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        select max(so.id) from (select id from station where line_number=#{lineNumber}) as so
+    </select>
+
+    <select id="selectMaxOrder" resultType="java.lang.Integer">
+        select max(so.station_order) from (
+        select station_order from station where line_number=#{lineNumber}) as so
+    </select>
+
+    <update id="updateIdPlus">
+        update station set id=id+1 where id>#{id}
+    </update>
+
+    <insert id="insertData">
+        insert into station(id,line_number,station_order,station_name)
+        values (#{id},#{lineNumber},#{stationOrder},#{stationName})
+    </insert>
+</mapper>
